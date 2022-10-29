@@ -1,0 +1,24 @@
+{
+  "name": "wdd330-frontend-dev-ii",
+  "version": "1.0.0",
+  "description": "Repository of all my work for my frontend dev II class. The class teaches how to create dynamic websites using HTML, CSS, and JavaScript without using any external frameworks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fedpre/wdd330-frontend-dev-II.git"
+  },
+  "keywords": [],
+  "author": "Federico Pregnolato",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fedpre/wdd330-frontend-dev-II/issues"
+  },
+  "homepage": "https://fedpre.github.io/wdd330-frontend-dev-II/",
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "prettier": "^2.7.1"
+  }
+}
