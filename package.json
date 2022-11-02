@@ -1,23 +1,24 @@
 {
-  "name": "wdd330-frontend-dev-ii",
+  "name": "wdd330-homepage",
   "version": "1.0.0",
-  "description": "Repository of all my work for my frontend dev II class. The class teaches how to create dynamic websites using HTML, CSS, and JavaScript without using any external frameworks.",
-  "main": "index.js",
+  "description": "wdd330 repository of notes and projects",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "snowpack dev",
+    "build": "snowpack build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fedpre/wdd330-frontend-dev-II.git"
   },
-  "keywords": [],
   "author": "Federico Pregnolato",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/fedpre/wdd330-frontend-dev-II/issues"
   },
-  "homepage": "https://fedpre.github.io/wdd330-frontend-dev-II/",
+  "homepage": "https://github.com/fedpre/wdd330-frontend-dev-II#readme",
   "devDependencies": {
+    "snowpack": "^3.8.8",
     "eslint": "^8.26.0",
     "prettier": "^2.7.1"
   }
