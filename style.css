@@ -2,6 +2,7 @@
 :root {
   --bg-primary: #2b2b2b;
   --text-white: #eeeeee;
+  --bg-secondary: #60ebe7;
 }
 * {
   padding: 0;
@@ -96,13 +97,25 @@ li {
   height: 70px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  transition: all 200ms ease-in-out;
+  padding: 0 15px;
+}
+
+li:hover {
+  background-color: var(--bg-secondary);
 }
 
 li a {
   text-decoration: none;
   color: var(--bg-primary);
   font-size: 1.1rem;
+  padding: 0 20px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+  color: var(--bg-primary);
 }
 
 @media only screen and (min-width: 800px) {
