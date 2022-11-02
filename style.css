@@ -31,6 +31,10 @@ h1 {
   text-align: center;
   padding: 3rem 0 1rem 0;
   font-family: "M PLUS Rounded 1c", sans-serif;
+  animation: heading;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: relative;
 }
 
 h2 {
@@ -42,6 +46,22 @@ h2 {
   text-underline-offset: 10px;
   text-decoration-color: #525252;
   text-decoration-thickness: 6px;
+  position: relative;
+  animation: heading;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 100ms;
+}
+
+@keyframes heading {
+  0% {
+    top: -20px;
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    opacity: 1;
+  }
 }
 
 ul {
@@ -52,6 +72,21 @@ ul {
   width: 100%;
   align-items: center;
   justify-content: center;
+  animation: buttons;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: relative;
+}
+
+@keyframes buttons {
+  0% {
+    opacity: 0;
+    left: -20px;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
 }
 
 li {
