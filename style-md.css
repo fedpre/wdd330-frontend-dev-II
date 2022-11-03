@@ -26,6 +26,72 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+}
+
+.arrow {
+  color: var(--text-white);
+  transition: all 200ms ease-in-out;
+}
+.arrow:hover {
+  color: var(--bg-secondary);
+}
+
+p a {
+  text-decoration: none;
+  color: var(--bg-secondary);
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  padding-left: 60px;
+}
+
+ul li {
+  margin-top: 10px;
+}
+
+ul li a {
+  text-decoration: none;
+  color: var(--bg-secondary);
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+
+ol {
+  padding: 20px 0 20px 50px;
+}
+
+ol li {
+  padding: 5px 0;
+}
+
+ol li ul {
+  padding: 5px 0 5px 30px;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.language-bash {
+  margin: 20px;
+  background-color: rgba(30, 30, 30, 0.7);
+  padding: 30px;
+  border-radius: 10px;
 }
 
 h1 {
