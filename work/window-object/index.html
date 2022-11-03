@@ -20,367 +20,372 @@
       </a>
       <h1>The Window Object</h1>
     </div>
+    <div class="project">
+      <a href="/wdd330-frontend-dev-II/window-object/timer.html" class="project-link"
+        >Project: Timer</a
+      >
+    </div>
 
     <md-block>
-        > In a browser environment the global object is the `window` object, which represents the browser window that contains a web page.
-
-  ## The Browser Object Model
-
-  The Browser Object Model (or BOM for short) is a collection of properties and methods that contain information about the browser and computer screen.
-
-  There are a number of properties and methods common among browsers. They are made available through the `window` object.
-
-  If you don’t know the name of the global object, you can also refer to it using the keyword `this` in the global scope. The following code provides a quick way of assigning the variable `global` to the global object:
-
-  ```javascript
-  const global = this;
-  ```
-
-  ### Going Global
-  Global variables are created without using `const`, `let`, or `var`.
-  They become part of the global object. They can be accessed this way:
-
-  ```javascript
-  x = 6;  // global variable created
-  // << 6
-
-  window.x // same variable can be accessed as a property of the window object
-  // << 6
-
-  // both variables are exactly the same
-  window.x === x;
-  // << true
-  ```
-
-  In general, you should refer to global variables without using the `window` object.
-
-  ES6 made `parseInt()` and `isNaN()` methods of the `Number` object, so they can be both be called using the following code:
-
-  ```javascript
-  Number.parseInt(4.2); // << 4
-  Number.isNaN(4.2);// << false
-  ```
-
-  ### Dialogs
-  The `window.alert()` method will pause the execution of the program and display a message in a dialog box.
-
-  ```javascript
-  window.alert('Hello');
-  // << undefined
-  ```
-
-  The `window.confirm()` method will stop the execution of the program and display a confirmation dialog that shows the message provided as an argument, and giving the options of OK or Cancel. It returns the boolean values of `true` if the user clicks OK, and `false` if the user clicks Cancel:
-
-  ```javascript
-  window.confirm('Do you wish to continue?');
-  // << undefined
-  ```
-
-  The `window.prompt()` method will stop the execution of the program. It displays a dialog that shows a message provided as an argument, as well as an input field that allows the user to enter text. This text is then returned as a string when the user clicks OK. If the user clicks Cancel, `null` is returned:
-
-  ```javascript
-  window.prompt('Please enter your name:');
-  ```
-
-  ## Browser Information
-
-  ### Which browser?
-
-  The `window` object has a `navigator` property that returns a reference to the `Navigator` object. The `Navigator` object contains information about the browser being used. Its `userAgent` property will return information about the browser and operating system being used.
-  ```javascript
-  window.navigator.userAgent
-  // << "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8"
-  ```
-
-  ### Location
-  The `window.location` property is an object that contains information about the URL of the current page. It contains a number of properties that provide information about different fragments of the URL.
-
-  ```javascript
-  window.location.href 
-  //<< "https://www.sitepoint.com/premium/books/javascript-novice-to-ninja"
-  ```
-
-  The `protocol` property returns a string describing the protocol used (such as `http`, `https`, `pop2`, `ftp` etc.). Note that there is a colon (`:`) at the end:
-
-  ```javascript
-  window.location.protocol
-  //<< "https:"
-  ```
-
-  The `host` property returns a string describing the domain of the current URL _and_ the port number (this is often omitted if the default port 80 is used):
-
-  ```javascript
-  window.location.host
-  // << "www.sitepoint.com"
-  ```
-
-  The `hostname` property returns a string describing the domain of the current URL:
-
-  ```javascript
-  window.location.hostname
-  //<< "www.sitepoint.com"
-  ```
-
-  The `port` property returns a string describing the port number, although it will return an empty string if the port is not explicitly stated in the URL:
-
-  ```javascript
-  window.location.port
-  //<< ""
-  ```
-
-  The `pathname` property returns a string of the path that follows the domain:
-
-  ```javascript
-  window.location.pathname
-  //<< "/premium/books/javascript-novice-to-ninja"
-  ```
-
-  The `search` property returns a string that starts with a “?” followed by the query string parameters. It returns an empty string if there are no query string parameters. This is what I get when I search for “JavaScript” on SitePoint:
-
-  ```javascript
-  window.location.search
-  //<< "?q=javascript&limit=24&offset=0&page=1&content_types[]=All&slugs[]=all&states[]=available&order="
-  ```
-
-  The `hash` property returns a string that starts with a “#” followed by the fragment identifier. It returns an empty string if there is no fragment identifier:
-
-  ```javascript
-  window.location.hash
-  //<< ""
-  ```
-
-  The `origin` property returns a string that shows the protocol and domain where the current page originated from. This property is read-only, so cannot be changed:
-
-  ```javascript
-  window.location.origin
-  //<< "https://www.sitepoint.com"
-  ```
-
-  The `window.location` object also has the following methods:
-
-  -  The `reload()` method can be used to force a reload of the current page. If it’s given a parameter of `true`, it will force the browser to reload the page from the server, instead of using a cached page.
-  -  The `assign()` method can be used to load another resource from a URL provided as a parameter, for example:
-
-  ```javascript
-  window.location.assign('https://www.sitepoint.com/')
-  ```
-
-  -  The `replace()` method is almost the same as the `assign()` method, except the current page will not be stored in the session history, so the user will be unable to navigate back to it using the back button.
-  -  The `toString()` method returns a string containing the whole URL:
-
-  ```javascript
-  window.location.toString();<< "https://www.sitepoint.com/javascript/"
-  ```
-
-  ## Browser History
-  The `window.history` property can be used to access information about any previously visited pages in the current browser session. 
-
-  The `window.history.length` property shows how many pages have been visited before arriving at the current page.
-
-  The `window.history.go()` method can be used to go to a specific page, where 0 is the current page:
-
-  ```javascript
-  window.history.go(1); // goes forward 1 page
-  window.history.go(0); // reloads the current page
-  window.history.go(-1); // goes back 1 page
-  ```
-
-  There are also the `window.history.forward()` and `window.history.back()` methods that can be used to navigate forwards and backwards by one page respectively, just like using the browser’s forward and back buttons
-
-  ## Controlling Windows
-  A new window can be opened using the `window.open()` method. This takes the URL of the page to be opened as its first parameter, the window title as its second parameter, and a list of attributes as the third parameter. It can be assigned to a variable and reference later in the code:
-
-  ```javascript
-  const popup = window.open('https://sitepoint.com','SitePoint','width=400,height=400,resizable=yes');
-
-  // Close the window
-  popup.close()
-
-  // Move the window
-  window.moveTo(0,0) // 1st param: X 2nd param: Y -- moves the windows to the top-left corner
-
-  // Resize a window
-  window.resize(600, 400) // 1st param: width 2nd param: height
-  ```
-
-  > Many browsers block pop-up windows and disallow some of these methods to be called in certain cases. For example, you can’t resize a window if more than one tab is open. You also can’t move or resize a window that wasn’t created using `window.open()`.
-
-  ### Screen Information
-
-  ```javascript
-  window.screen.height // get the height 1024
-  window.screen.width // get the width 1280
-  ```
-
-  ## Document Object
-  Each `window` contains a `document` object. Let's look at some methods.
-
-  `document.write()` method writes a string of text to the page. It will replace the entire document:
-  ```javascript
-  document.write('Hello, world!');
-
-  // you can also include HTML tags
-
-  document.write('<h1>Hello, world!</h1>')
-  ```
-
-  Do not use the `document.write()` method
-
-  ### Cookies
-  Cookies are small files saved on your computer. HTTP is a stateless protocol. Each visit to a page is a brand new one. Cookies fixed the problem by storing information that could be retrieved as needed. Cookies are passed between client and server on each HTTP request.
-
-  Cookies can be used for personalizing a user’s browsing experience, storing user preferences, keeping track of user choices (such as a shopping cart), authentication and tracking users.
-
-  ### Creating cookies
-  Assign cookie in JS
-  ```javascript
-  document.cookie = 'name=spiderman';
-  ```
-
-  The `document.cookie` property acts like a special type of string. Assigning another cookie to it won’t overwrite the entire property, it will just append it to the end of the string.
-  If you want to change value, use a key that is already present and assign a different value.
-
-  ```javascript
-  document.cookie = 'hero=true';
-  //<< "hero=true"
-
-  document.cookie = 'city=Metropolis';
-  //<< "city=Metropolis"
-
-  document.cookie = 'name=Batman'
-  //<< "name=Batman"
-  document.cookie = 'city=Gotham'
-  //<< "city=Gotham"
-  ```
-
-  ### Reading Cookies
-
-  ```javascript
-  document.cookie;
-  //<< "name=Batman; hero=true; city=Gotham"
-  ```
-
-  Get all the cookies and store them into an array
-  ```javascript
-  const cookies = document.cookie.split("; ");
-  for (crumb of cookies){
-      const [key,value] = crumb.split("=");
-      console.log(`The value of ${key} is ${value}`);
-  }
-  //<< The value of name is Batman
-  //The value of hero is true
-  //The value of city is Gotham
-  ```
-
-  ### Cookie Expiry Dates
-  Cookies are session cookies by default.
-
-  They can be make persistent by adding the `"; expires=date"` at the end of the cookie, where `date` is a date value in the UTC String format `Day, DD-Mon-YYYY HH:MM:SS GMT`
-
-  ```javascript
-  const expiryDate = new Date(); 
-  const tomorrow = expiryDate.getTime() + 1000 * 60 * 60 * 24;
-  expiryDate.setTime(tomorrow);
-
-  document.cookie = `name=Batman; expires=${ expiryDate.toUTCString()}`;
-
-  // OR use max-age
-
-  document.cookie = 'name=Batman; max-age=86400' // 86400 secs = 1 day
-  ```
-
-  ### The Path and Domain of Cookies
-  Cookies can only be read by pages inside the same directory and domain as the file was set.
-
-  The path can be changed so that any page in the root directory can read the cookie. It’s done by adding the string `; path=/` to the end of the cookie when it is set:
-
-  ```javascript
-  document.cookie = 'name=Batman; path=/'
-  ```
-
-  It’s also possible to set the domain by adding `"; domain=domainName"` to the end of the cookie:
-
-  ```javascript
-  document.cookie = 'name=Batman; domain=sitepoint.com';
-  ```
-
-  A cookie can only be read by the domain that created it anyway, but doing this will allow all subdomains of sitepoint.com (such as javascript.sitepoint.com and books.sitepoint.com) to read it.
-
-  ### Secure Cookies
-  Adding the string `; secure` to the end of a cookie will ensure it’s only transmitted over a secure HTTPS network:
-
-  ```javascript
-  document.cookie = 'name=Batman; secure';
-  ```
-
-  ### Deleting Cookies
-
-  To remove a cookie, you need to set it to expire at a time in the past:
-
-  ```javascript
-  document.cookie = 'name=Batman; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-  ```
-
-  If a cookie is a session cookie, it will expire when the tab or window is closed.
-
-  ## Timing Functions
-  The `window.setTimeout()` method accepts a callback to a function as its first parameter and a number of milliseconds as its second parameter. It will invoke the callbak function just once.
-
-  Try entering the following example into a console. It should show an alert dialog after three seconds (that’s 3000 milliseconds):
-
-  ```javascript
-  window.setTimeout( () => alert("Time's Up!"), 3000);
-  // << 4
-  ```
-
-  Notice that the method returns an integer. **This is an ID used to reference that particular timeout**. It can also cancel the timeout using the `window.clearTimeout()` method. Try calling the code again and make a note of the number that is returned:
-
-  ```javascript
-  window.setTimeout( () => alert("Time's Up!"), 3000);
-  //<< 5
-
-  window.clearTimeout(5);
-  // << undefined
-  ```
-
-  The `window.setInterval()` method works in a similar way to `window.setTimeout()`, except that it will repeatedly invoke the callback function after every given number of milliseconds.
-
-  The previous example used an anonymous function, but it is also possible to use a named function like so:
-
-  ```javascript
-  function chant(){ console.log('Beetlejuice'); }
-
-  const summon = window.setInterval(chant, 1000);
-  // << 6
-  ```
-
-  To stop this, we can use the `window.clearInterval()` method and the variable `repeat` as an argument (this is because the `window.setInterval()` method returns its ID, so this will be assigned to the variable `repeat`):
-
-  ```javascript
-  window.clearInterval(summon);
-  ```
-
-  ## Animation
-  `requestanimationFrame` works as the `window.setInterval()` method.
-
-  ```javascript
-  const squareElement = document.getElementById('square');
-  let angle = 0;
-
-  function rotate() {
-      angle = (angle + 2)%360;
-      squareElement.style.transform = `rotate(${angle}deg)`
-      window.requestAnimationFrame(rotate); //calls rotate() recursively
-  }
-
-  const id = requestAnimationFrame(rotate);
-
-  // cancel the animation
-
-  cancelAnimationFrame(id);
-  ```
-
-
+      > In a browser environment the global object is the `window` object, which represents the browser window that contains a web page.
+
+      ## The Browser Object Model
+      
+      The Browser Object Model (or BOM for short) is a collection of properties and methods that contain information about the browser and computer screen.
+      
+      There are a number of properties and methods common among browsers. They are made available through the `window` object.
+      
+      If you don’t know the name of the global object, you can also refer to it using the keyword `this` in the global scope. The following code provides a quick way of assigning the variable `global` to the global object:
+      
+      ```javascript
+      const global = this;
+      ```
+      
+      ### Going Global
+      Global variables are created without using `const`, `let`, or `var`.
+      They become part of the global object. They can be accessed this way:
+      
+      ```javascript
+      x = 6;  // global variable created
+      // << 6
+      
+      window.x // same variable can be accessed as a property of the window object
+      // << 6
+      
+      // both variables are exactly the same
+      window.x === x;
+      // << true
+      ```
+      
+      In general, you should refer to global variables without using the `window` object.
+      
+      ES6 made `parseInt()` and `isNaN()` methods of the `Number` object, so they can be both be called using the following code:
+      
+      ```javascript
+      Number.parseInt(4.2); // << 4
+      Number.isNaN(4.2);// << false
+      ```
+      
+      ### Dialogs
+      The `window.alert()` method will pause the execution of the program and display a message in a dialog box.
+      
+      ```javascript
+      window.alert('Hello');
+      // << undefined
+      ```
+      
+      The `window.confirm()` method will stop the execution of the program and display a confirmation dialog that shows the message provided as an argument, and giving the options of OK or Cancel. It returns the boolean values of `true` if the user clicks OK, and `false` if the user clicks Cancel:
+      
+      ```javascript
+      window.confirm('Do you wish to continue?');
+      // << undefined
+      ```
+      
+      The `window.prompt()` method will stop the execution of the program. It displays a dialog that shows a message provided as an argument, as well as an input field that allows the user to enter text. This text is then returned as a string when the user clicks OK. If the user clicks Cancel, `null` is returned:
+      
+      ```javascript
+      window.prompt('Please enter your name:');
+      ```
+      
+      ## Browser Information
+      
+      ### Which browser?
+      
+      The `window` object has a `navigator` property that returns a reference to the `Navigator` object. The `Navigator` object contains information about the browser being used. Its `userAgent` property will return information about the browser and operating system being used.
+      ```javascript
+      window.navigator.userAgent
+      // << "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8"
+      ```
+      
+      ### Location
+      The `window.location` property is an object that contains information about the URL of the current page. It contains a number of properties that provide information about different fragments of the URL.
+      
+      ```javascript
+      window.location.href 
+      //<< "https://www.sitepoint.com/premium/books/javascript-novice-to-ninja"
+      ```
+      
+      The `protocol` property returns a string describing the protocol used (such as `http`, `https`, `pop2`, `ftp` etc.). Note that there is a colon (`:`) at the end:
+      
+      ```javascript
+      window.location.protocol
+      //<< "https:"
+      ```
+      
+      The `host` property returns a string describing the domain of the current URL _and_ the port number (this is often omitted if the default port 80 is used):
+      
+      ```javascript
+      window.location.host
+      // << "www.sitepoint.com"
+      ```
+      
+      The `hostname` property returns a string describing the domain of the current URL:
+      
+      ```javascript
+      window.location.hostname
+      //<< "www.sitepoint.com"
+      ```
+      
+      The `port` property returns a string describing the port number, although it will return an empty string if the port is not explicitly stated in the URL:
+      
+      ```javascript
+      window.location.port
+      //<< ""
+      ```
+      
+      The `pathname` property returns a string of the path that follows the domain:
+      
+      ```javascript
+      window.location.pathname
+      //<< "/premium/books/javascript-novice-to-ninja"
+      ```
+      
+      The `search` property returns a string that starts with a “?” followed by the query string parameters. It returns an empty string if there are no query string parameters. This is what I get when I search for “JavaScript” on SitePoint:
+      
+      ```javascript
+      window.location.search
+      //<< "?q=javascript&limit=24&offset=0&page=1&content_types[]=All&slugs[]=all&states[]=available&order="
+      ```
+      
+      The `hash` property returns a string that starts with a “#” followed by the fragment identifier. It returns an empty string if there is no fragment identifier:
+      
+      ```javascript
+      window.location.hash
+      //<< ""
+      ```
+      
+      The `origin` property returns a string that shows the protocol and domain where the current page originated from. This property is read-only, so cannot be changed:
+      
+      ```javascript
+      window.location.origin
+      //<< "https://www.sitepoint.com"
+      ```
+      
+      The `window.location` object also has the following methods:
+      
+      -  The `reload()` method can be used to force a reload of the current page. If it’s given a parameter of `true`, it will force the browser to reload the page from the server, instead of using a cached page.
+      -  The `assign()` method can be used to load another resource from a URL provided as a parameter, for example:
+      
+      ```javascript
+      window.location.assign('https://www.sitepoint.com/')
+      ```
+      
+      -  The `replace()` method is almost the same as the `assign()` method, except the current page will not be stored in the session history, so the user will be unable to navigate back to it using the back button.
+      -  The `toString()` method returns a string containing the whole URL:
+      
+      ```javascript
+      window.location.toString();<< "https://www.sitepoint.com/javascript/"
+      ```
+      
+      ## Browser History
+      The `window.history` property can be used to access information about any previously visited pages in the current browser session. 
+      
+      The `window.history.length` property shows how many pages have been visited before arriving at the current page.
+      
+      The `window.history.go()` method can be used to go to a specific page, where 0 is the current page:
+      
+      ```javascript
+      window.history.go(1); // goes forward 1 page
+      window.history.go(0); // reloads the current page
+      window.history.go(-1); // goes back 1 page
+      ```
+      
+      There are also the `window.history.forward()` and `window.history.back()` methods that can be used to navigate forwards and backwards by one page respectively, just like using the browser’s forward and back buttons
+      
+      ## Controlling Windows
+      A new window can be opened using the `window.open()` method. This takes the URL of the page to be opened as its first parameter, the window title as its second parameter, and a list of attributes as the third parameter. It can be assigned to a variable and reference later in the code:
+      
+      ```javascript
+      const popup = window.open('https://sitepoint.com','SitePoint','width=400,height=400,resizable=yes');
+      
+      // Close the window
+      popup.close()
+      
+      // Move the window
+      window.moveTo(0,0) // 1st param: X 2nd param: Y -- moves the windows to the top-left corner
+      
+      // Resize a window
+      window.resize(600, 400) // 1st param: width 2nd param: height
+      ```
+      
+      > Many browsers block pop-up windows and disallow some of these methods to be called in certain cases. For example, you can’t resize a window if more than one tab is open. You also can’t move or resize a window that wasn’t created using `window.open()`.
+      
+      ### Screen Information
+      
+      ```javascript
+      window.screen.height // get the height 1024
+      window.screen.width // get the width 1280
+      ```
+      
+      ## Document Object
+      Each `window` contains a `document` object. Let's look at some methods.
+      
+      `document.write()` method writes a string of text to the page. It will replace the entire document:
+      ```javascript
+      document.write('Hello, world!');
+      
+      // you can also include HTML tags
+      
+      document.write('<h1>Hello, world!</h1>')
+      ```
+      
+      Do not use the `document.write()` method
+      
+      ### Cookies
+      Cookies are small files saved on your computer. HTTP is a stateless protocol. Each visit to a page is a brand new one. Cookies fixed the problem by storing information that could be retrieved as needed. Cookies are passed between client and server on each HTTP request.
+      
+      Cookies can be used for personalizing a user’s browsing experience, storing user preferences, keeping track of user choices (such as a shopping cart), authentication and tracking users.
+      
+      ### Creating cookies
+      Assign cookie in JS
+      ```javascript
+      document.cookie = 'name=spiderman';
+      ```
+      
+      The `document.cookie` property acts like a special type of string. Assigning another cookie to it won’t overwrite the entire property, it will just append it to the end of the string.
+      If you want to change value, use a key that is already present and assign a different value.
+      
+      ```javascript
+      document.cookie = 'hero=true';
+      //<< "hero=true"
+      
+      document.cookie = 'city=Metropolis';
+      //<< "city=Metropolis"
+      
+      document.cookie = 'name=Batman'
+      //<< "name=Batman"
+      document.cookie = 'city=Gotham'
+      //<< "city=Gotham"
+      ```
+      
+      ### Reading Cookies
+      
+      ```javascript
+      document.cookie;
+      //<< "name=Batman; hero=true; city=Gotham"
+      ```
+      
+      Get all the cookies and store them into an array
+      ```javascript
+      const cookies = document.cookie.split("; ");
+      for (crumb of cookies){
+          const [key,value] = crumb.split("=");
+          console.log(`The value of ${key} is ${value}`);
+      }
+      //<< The value of name is Batman
+      //The value of hero is true
+      //The value of city is Gotham
+      ```
+      
+      ### Cookie Expiry Dates
+      Cookies are session cookies by default.
+      
+      They can be make persistent by adding the `"; expires=date"` at the end of the cookie, where `date` is a date value in the UTC String format `Day, DD-Mon-YYYY HH:MM:SS GMT`
+      
+      ```javascript
+      const expiryDate = new Date(); 
+      const tomorrow = expiryDate.getTime() + 1000 * 60 * 60 * 24;
+      expiryDate.setTime(tomorrow);
+      
+      document.cookie = `name=Batman; expires=${ expiryDate.toUTCString()}`;
+      
+      // OR use max-age
+      
+      document.cookie = 'name=Batman; max-age=86400' // 86400 secs = 1 day
+      ```
+      
+      ### The Path and Domain of Cookies
+      Cookies can only be read by pages inside the same directory and domain as the file was set.
+      
+      The path can be changed so that any page in the root directory can read the cookie. It’s done by adding the string `; path=/` to the end of the cookie when it is set:
+      
+      ```javascript
+      document.cookie = 'name=Batman; path=/'
+      ```
+      
+      It’s also possible to set the domain by adding `"; domain=domainName"` to the end of the cookie:
+      
+      ```javascript
+      document.cookie = 'name=Batman; domain=sitepoint.com';
+      ```
+      
+      A cookie can only be read by the domain that created it anyway, but doing this will allow all subdomains of sitepoint.com (such as javascript.sitepoint.com and books.sitepoint.com) to read it.
+      
+      ### Secure Cookies
+      Adding the string `; secure` to the end of a cookie will ensure it’s only transmitted over a secure HTTPS network:
+      
+      ```javascript
+      document.cookie = 'name=Batman; secure';
+      ```
+      
+      ### Deleting Cookies
+      
+      To remove a cookie, you need to set it to expire at a time in the past:
+      
+      ```javascript
+      document.cookie = 'name=Batman; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+      ```
+      
+      If a cookie is a session cookie, it will expire when the tab or window is closed.
+      
+      ## Timing Functions
+      The `window.setTimeout()` method accepts a callback to a function as its first parameter and a number of milliseconds as its second parameter. It will invoke the callbak function just once.
+      
+      Try entering the following example into a console. It should show an alert dialog after three seconds (that’s 3000 milliseconds):
+      
+      ```javascript
+      window.setTimeout( () => alert("Time's Up!"), 3000);
+      // << 4
+      ```
+      
+      Notice that the method returns an integer. **This is an ID used to reference that particular timeout**. It can also cancel the timeout using the `window.clearTimeout()` method. Try calling the code again and make a note of the number that is returned:
+      
+      ```javascript
+      window.setTimeout( () => alert("Time's Up!"), 3000);
+      //<< 5
+      
+      window.clearTimeout(5);
+      // << undefined
+      ```
+      
+      The `window.setInterval()` method works in a similar way to `window.setTimeout()`, except that it will repeatedly invoke the callback function after every given number of milliseconds.
+      
+      The previous example used an anonymous function, but it is also possible to use a named function like so:
+      
+      ```javascript
+      function chant(){ console.log('Beetlejuice'); }
+      
+      const summon = window.setInterval(chant, 1000);
+      // << 6
+      ```
+      
+      To stop this, we can use the `window.clearInterval()` method and the variable `repeat` as an argument (this is because the `window.setInterval()` method returns its ID, so this will be assigned to the variable `repeat`):
+      
+      ```javascript
+      window.clearInterval(summon);
+      ```
+      
+      ## Animation
+      `requestanimationFrame` works as the `window.setInterval()` method.
+      
+      ```javascript
+      const squareElement = document.getElementById('square');
+      let angle = 0;
+      
+      function rotate() {
+          angle = (angle + 2)%360;
+          squareElement.style.transform = `rotate(${angle}deg)`
+          window.requestAnimationFrame(rotate); //calls rotate() recursively
+      }
+      
+      const id = requestAnimationFrame(rotate);
+      
+      // cancel the animation
+      
+      cancelAnimationFrame(id);
+      ```
+      
+      
     </md-block>
   </body>
 </html>

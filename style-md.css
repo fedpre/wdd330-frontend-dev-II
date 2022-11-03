@@ -3,6 +3,7 @@
   --bg-primary: #2b2b2b;
   --text-white: #eeeeee;
   --bg-secondary: #60ebe7;
+  --code-snippet: #eb9360;
 }
 * {
   padding: 0;
@@ -100,6 +101,15 @@ table {
   word-wrap: break-word;
 }
 
+p code {
+  padding: 2px 8px;
+
+  background-color: var(--code-snippet);
+  color: var(--bg-primary);
+  margin: .5rem;
+  border-radius: 10px;
+}
+
 h1 {
   font-size: 3rem;
   text-align: center;
@@ -156,3 +166,21 @@ h6 {
   }
 }
 
+.project {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 10px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+}
+
+.project-link {
+  text-decoration: none;
+  color: var(--bg-primary);
+}
+
+.project:hover {
+  background-color: #00fff7;
+  box-shadow: 0px 0px 10px black;
+}
