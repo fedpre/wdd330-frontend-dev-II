@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WDD330 | Single-page Applications</title>
+    <link rel="stylesheet" href="../../style-md.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  </head>
+
+  <body>
+    <div class="header-top">
+      <a href="/wdd330-frontend-dev-II/" class="arrow">
+        <span class="material-symbols-outlined"> arrow_back_ios </span>
+      </a>
+      <h1>Single-page Application</h1>
+    </div>
+
+    <md-block>
+      [How Single-Page Application Work](https://blog.pshrmn.com/how-single-page-applications-work/)
+
+      A single-page application (SPA) is a website that re-renders its content in response to navigation actions (e.g. clicking a link) without making a request to the server to fetch new HTML.
+      
+      Most rely on the same browser behavior and native APIs to enable the core functionality. Understanding these is key to knowing how single-page applications work.
+      
+      Location-based single-page applications track state internally. 
+      
+      + Internal state: There is only `one entry` to the app, which means you are always start at the root and navigate from there. Updating doesn't update the location.
+      + Location-based: Yuo can share a link with a location and that person will see what you see at that location
+      
+      ### Location Primer
+      
+      SPAs uses the `window.location` to interact with the URL. Here are the parts of the URL:
+      
+      ```javascript
+      // https://www.example.com/one?key=value#trending
+      
+      location = {
+        protocol: "https:",
+        hostname: "www.example.com",
+        pathname: "/one",
+        search: "?key=value",
+        hash: "#trending"
+      }
+      ```
+      
+      Only three of the location object’s properties are important for an SPA: **pathname**, **hash**, and **search** (commonly called a query string).
+      
+      The pathname is typically the most important of these three properties because it is the one used for determining what content to render.
+      
+      ### Route Matching
+      Routers are made up of routes, which describe the location that they should match. These can be static (`/about`) or dynamic (`/album/:id`, where the value of `:id` can be any number of possibilities) paths. The [path-to-regexp](https://github.com/pillarjs/path-to-regexp) package is a very popular solution for creating these paths.
+      
+      ```javascript
+      const routes = [ 
+        {path: '/' }, 
+        { path: '/about' }, 
+        { path: '/album/:id' } 
+      ];
+      ```
+      
+      After matching a route, the router will trigger a re-render of the application. Actual implementations for this are largely up to the router. For example, a router might use the [observer pattern](https://en.wikipedia.org/wiki/Observer_pattern), where you give the router a function that knows how to trigger a re-render and the router will call it after it matches a route.
+      
+      ### In-App Navigation
+      When you click an anchor, the browser has native behavior attached to the event to trigger navigation. However, you can also attach your own click handler and override the native behavior (using `event.preventDefault()` in modern browsers).
+      
+      #### How Browsers Handle Locations
+      The browsing context maintains a “session history”, which is essentially an array of location entries. An entry stores information about a location: its URL, the associated `Document`, serialized state, and a few more properties.
+      
+      ### Session History
+      
+      As you’re clicking links and navigating through pages, the browser tab is building up a session history. Each navigation makes a request to a server and creates a new entry (including a new `Document`). This helps keep track of all the pages visited.
+      
+      How do we avoid making these requests to the server for navigation?
+      
+      ### [The History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+      
+      Instead of creating a new `Document` for every location, the History API re-uses the active `Document` by updating it to reflect the new location.
+      
+      The History API has three core functions: `pushState()`, `replaceState()`, and `go()`. These (and the rest of the API) are accessed via `window.history`.
+      
+      ### pushState() and replaceState()
+      
+      Both `pushState()` and `replaceState()` have the same function signature.
+      
+      1.  The first argument is `state`. If you do not want to pass any state, pass `null`. It may be tempting to keep application state here, but there are some caveats that will be discussed later.
+      2.  The second is a `title` string, but no browsers actually use this yet.
+      3.  The third argument is the `path` that you want to navigate to. This can be a full URL, an absolute path, or a relative path, but it must be within the same application (same protocol and hostname). If it is not, a `DOMException` error will be thrown.
+      
+      ```js
+      history.pushState(null, '', '/next-location');
+      history.replaceState(null, '', '/replace-location');
+      // attaching state to an entry
+      history.pushState({ msg: 'Hi!' }, '', '/greeting');
+      // while on medium.com
+      history.pushState(null, '', 'https://www.google.com');
+      // throws a DOMException
+      ```
+      
+      `history.pushState()` adds an entry to the session history after the current entry. If there are entries after the current entry, those are lost when you push a new location. This is the normal behavior for when you click an anchor.
+      
+      `history.replaceState()` replaces the current entry in the session history. Any entries after the current entry are unaffected. This is similar to the behavior for clicking an anchor whose `href` is exactly the same as the current URL, except `replaceState()` can replace the current entry with any location.
+      
+      ### go()
+      
+      `go()` is the programmatic way of performing the same task as the browser’s forward and back buttons.
+      
+      `go()` can be useful when you know there is a previous page, like closing a location-aware modal, but I don’t find many uses for it.
+      
+      `go()` takes a single argument, a number, which is the number of entries away from the current one you want to navigate. Positive numbers go forward, negative numbers go backwards, and zero (or `undefined`) reloads the page.
+      
+      ```js
+      go(-1); // go back one entry
+      go(1); // go forward one entry
+      go(-10); // go way back
+      go(0); // reload
+      go(); // reload
+      ```
+      
+      There are also `history.back()` and `history.forward()` methods, which are the same as `history.go(-1)` and `history.go(1)`.
+      
+      ### State
+      
+      State is data that is attached to any entry. It persists navigation, so if you add state to an entry, navigate away, and then go back to the entry, the state will still be there. State is attached to an entry with `pushState()` and `replaceState()`. You can access the current entry’s state using `history.state`.
+      
+      Limitations:
+      1. Serializable - turn into a string
+      2. Size limitations
+      3. Direct navigation the state is `null`
+      
+      A good rule of thumb is that state should be used for non-rendered data, like a key to uniquely identify the entry or the URL to redirect to after a user logs in.
+      
+      ## Navigating in SPA using History API
+      
+      How do single-page applications take advantage of the History API? As mentioned above, we can add a click handler to anchors that overrides the native behavior using `event.preventDefault()`. The handler can call `history.pushState()/history.replaceState()` to perform the navigation without triggering a server request.
+      
+      However, the History API is only updating the session history, so the handler will also need to interact with the router to let it know the new location. Many routers use a History API wrapper to merge these steps.
+      
+      Example with React
+      
+      <!-- ```javascript
+      // React example 
+      const Link = ({ children, href }) => ( 
+        //<a href={href} onClick={event => { 
+        // override native behavior 
+        event.preventDefault(); 
+        // navigate using the History API 
+        // (ignoring replaceState() for brevity) 
+        history.pushState(null, '', href); 
+        // finally, let the router know navigation happened! 
+        }
+        > {children} 
+        //</a>
+      ); 
+      
+      <Link href="/somewhere">Somewhere</Link> 
+      // renders 
+      <a href="/somewhere">Somewhere</a> 
+      // but clicking on it will trigger a history.pushState() call
+      ``` -->
+      
+      For more vanilla implementations, you could add a global event listener for clicks that detects in-app navigations, overrides the default behavior, and replaces it with a History API call.
+      
+      ### Detecting back/forward button navigation
+      
+      When the back and forward buttons are clicked (as well as when `history.go()` is called), the browser emits a `popstate` event. In order to detect these, we can add an event listener to the window object.
+      
+      ```js
+      window.addEventListener('popstate', event => { 
+        // let the router know navigation happened! 
+      }, false);
+      ```
+      
+      # The Problem with Single Page Apps
+      [Link to article](https://gomakethings.com/the-problem-with-single-page-apps/)
+      
+      Routing: Determine which UI or layout to show based on the URL.
+      
+      Single-page apps (or SPAs as they’re sometimes called) serve all of the code for an entire multi-UI app from a single `index.html` file.
+      
+      They use JavaScript to handle URL routing with real URLs. For this to work, you need to:
+      
+      1.  Configure the server to point all paths on a domain back to the root `index.html` file. For example, `todolist.com` and `todolist.com/lists` should both point to the same file.
+      2.  Suppress the default behavior when someone clicks a link that points to another page in the app.
+      3.  Use more JavaScript—`history.pushState()`—to update the URL without triggering a page reload.
+      4.  Match the URL against a map of _routes_, and serve the right content based on it.
+      5.  If your URL has variable information in it (like a todolist ID, for example), parse that data out of the URL.
+      6.  Detect when someone clicks the browser’s back button/forward button, and update the URL and UI.
+      7.  Update the `title` element on the page.
+      8.  Use _even more JavaScript_ to dynamically focus the content area when the content changes (for screen-reader users).
+      
+      That said, if using JavaScript to handle routing is something you’re interested in, [Krasimir Tsonev has written an excellent article on how that works](http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url), and open sourced a routing plugin, [Navigo](https://github.com/krasimir/navigo), based on the article.
+      
+      ## A Simpler Approach
+      
+      **Let the browser load real HTML files located at the actual URLs.** Instead of a single-page app, you build a multi-page app.
+      
+      To render the UI, you include a unique selector in the markup that describes the current view (such as `[data-app="lists"]` or `[data-app="settings"]`).
+      
+      Then use this JS for template:
+      
+      ```js
+      // Get the app container
+      var app = document.querySelector('[data-app]');
+      
+      // Determine the view/UI
+      var page = app.getAttribute('data-app');
+      
+      // Render the correct UI
+      if (page === 'lists') {
+        // Render the homepage...
+      }
+      
+      if (page === 'settings') {
+        // Render the settings page...
+      }
+      ```
+      
+      Similar to what you would do in PHP.
+      
+      ## Why is this approach better than routing?
+      
+      1.  Support for the browser’s forward and backward buttons are baked in. You don’t need to do anything to make that work.
+      2.  You don’t need to intercept clicks and determine if the clicked link points to an internal link or an external one. You just let them all resolve.
+      3.  You don’t need to use complex regex patterns or another library to parse the URL and determine which view or UI to render. It’s baked into the markup already.
+      4.  It’s simpler and easier to implement.
+      
+      A counter argument might be that using JavaScript routing results in faster apps because you avoid a page reload.
+      
+      That _can_ be true, but if you use front end performance best practices and load static HTML files, I find that page loads using this approach feel nearly instantaneous.
+    </md-block>
+  </body>
+</html>
