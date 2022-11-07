@@ -22,7 +22,169 @@
     </div>
 
     <md-block>
-      
+      Templating is huge on the web. It can be done server-side or client-side.
+
+It is usually done by a dedicated templating library or a framework that supports templating. 
+
+There is another way: The HTML5 `<template>` tag.
+
+## What is exactly the `<template>` element?
+It provides an easy way to define a reusable fragment of HTML that can be manipulated just like you would the contents of the document itself, but without the overhead of actually updating the DOM or having to compile and parse strings of HTML.
+
+Anything inside of a `<template>` tag gets parsed just like regular HTML, except:
+
+-   It doesn't get rendered.
+-   `script` tags inside of it don't get run.
+-   `style` tags inside of it don't get evaluated.
+-   It doesn't load any external resources (so you won't see any requests for the contents of `<img>` or `<embed>` tags).
+-   It can be accessed as a `DocumentFragment` instance via the special `content` property of the `<template>` element.
+
+That `content` property is the powerful bit here. `DocumentFragment` instances provide an API for manipulating their contents that's largely the same as the global `document` object, so you can manipulate them like their own separate document.
+
+## What can you do with it?
+
+Example
+```html
+<template id='#closeTemplate'>
+    <button type="button" class="close" data-dismiss='modal' aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</template>
+```
+
+Then you can:
+
+```js
+const closeTemplate = document.querySelector('#closeTemplate').content
+
+for (const modalHeader of document.querySelectorAll('.modal-header')) {
+    modalHeader.append(closeTemplate.cloneNode(true))
+}
+```
+
+The most important thing here is the call to the `cloneNode` method of the template content. This method, when called with `true` as an argument, creates a completely new `DocumentFragment` instance that's an exact copy of the original.
+
+## Unleash the real power
+
+This is where the `DocumentFragment` class having an interface almost the same as the global `document` object comes in. With this, you can call `querySelector` on the fragment just like you would to find elements in the page, and get a real `Element` or `NodeList` back that you can then manipulate just like if you had requested elements in the page itself.
+
+```js 
+<template id='modalTemplate'>
+    <div class='modal fade' tabindex='-1' role='dialog' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title'></h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'></div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary'>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+```
+
+That's how to implement the template:
+
+```js
+const modalTemplate = document.querySelector('#modalTemplate')
+
+function createModal(id, title, body) {
+    const node = modalTemplate.cloneNode(true)
+    const modal = node.querySelector('.modal')
+    const modalTitle = node.querySelector('.modal-title')
+    const modalBody = node.querySelector('.modal-body')
+
+    modal.id = id
+    modal.setAttribute('aria-labelledby', `${id}Title`)
+
+    modalTitle.id = `${id}Title`
+    modalTitle.textContent = title
+
+    modalBody.innerHTML = body
+
+    document.body.append(node)
+
+    return document.querySelector(`#${id}`)
+}
+```
+
+Because you're doing all of this template construction from JavaScript, you also have the full power of JavaScript available for flow control logic.
+
+On top of that, because `DocumentFragment` works almost the same as the DOM, you can inject HTML5 templates into other HTML5 templates.
+
+By leveraging these tow facts, you can create complex layouts composed of multiple HTML5 templates with little effort.
+
+# [The Content Template element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template)
+
+The HTML5 `<template>` element is actually very well supported. Every major browser released in the last 3 years fully supports it, and most released in the past 5 years do too.
+
+The **`<template>`** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) element is a mechanism for holding [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML) that is not to be rendered immediately when a page is loaded but may be instantiated subsequently during runtime using JavaScript.
+
+## Examples
+
+First, we have a table into which we will later insert content using JavaScript code. Then comes the template, which describes the structure of an HTML fragment representing a single table row.
+```html
+<table id="producttable">
+  <thead>
+    <tr>
+      <td>UPC_Code</td>
+      <td>Product_Name</td>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- existing data could optionally be included here -->
+  </tbody>
+</table>
+
+<template id="productrow">
+  <tr>
+    <td class="record"></td>
+    <td></td>
+  </tr>
+</template>
+```
+
+We use JavaScript to insert rows into the table, with each row being constructed using the template as its basis.
+
+```javascript
+// Test to see if the browser supports the HTML template element by checking
+// for the presence of the template element's content attribute.
+if ('content' in document.createElement('template')) {
+    // Instantiate the table with the existing HTML tbody
+    // and the row with the template
+    const tbody = document.querySelector("tbody");
+    const template = document.querySelector('#productrow');
+
+    // Clone the new row and insert it into the table
+    const clone = template.content.cloneNode(true);
+    let td = clone.querySelectorAll("td");
+    td[0].textContent = "1235646565";
+    td[1].textContent = "Stuff";
+
+    tbody.appendChild(clone);
+
+    // Clone the new row and insert it into the table
+    const clone2 = template.content.cloneNode(true);
+    td = clone2.querySelectorAll("td");
+    td[0].textContent = "0384928528";
+    td[1].textContent = "Acme Kidney Beans 2";
+
+    tbody.appendChild(clone2);
+
+} else {
+  // Find another way to add the rows to the table because
+  // the HTML template element is not supported.
+}
+```
+
+
     </md-block>
   </body>
 </html>
