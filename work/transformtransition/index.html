@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WDD330 | Transitions and Transformations</title>
+    <link rel="stylesheet" href="../../style-md.css" />
+        <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  </head>
+  <body>
+    <div class="header-top">
+      <a href='/wdd330-frontend-dev-II/' class="arrow">
+         <span class="material-symbols-outlined">
+           arrow_back_ios
+         </span>
+      </a>
+      <h1>Transitions and Transformations</h1>
+    </div>
+    <md-block>
+      ## Transforms
+
+      The CSS3 `transform` property lets you lets you translate, rotate, scale, and/or skew any element on the page.
+      
+      ### Translation
+      Translation functions allow you to move elements left, right, up, or down. 
+      
+      These functions are similar to the behavior of `position: relative;` when declaring `top` and `left`, moving elements up and down or left and right along the x and y axes. 
+      
+      When you employ a translation function, you’re moving elements without impacting the flow of the document.
+      
+      ```css
+      transform: translate(45px, -45px); /* x from left y from the top*/
+      ```
+      
+      If you only want to move an element vertically or horizontally, you can use the `translatex` or `translatey` functions respectively. To move 45px to the right along the x axis, include:
+      
+      ```css
+      transform: translateX(45px);
+      ```
+      
+      To move up along the y axis by 30px, include:
+      
+      ```css
+      transform: translateY(-30px);
+      ```
+      
+      Transforms don’t work on inline elements. But that’s easy enough to fix. We’ll just add `display: inline-block;` to our span.
+      
+      ### Scaling
+      
+      The `scale(x,y)` function scales an element by the defined factors horizontally then vertically. If only one value is provided, it will be used for both the `x` and `y` values.
+      
+      ```css
+      transform: scale(1.5, 0.25);
+      ```
+      
+      You can also use the `scaleX(x)` or `scaleY(y)` functions.
+      
+      To declare multiple transformations, provide a space-separated list of `transform` functions. We simply add our `scale` to the end of that space-separated list.
+      
+      ### Rotation
+      The `rotate()` function rotates an element around the point of origin by a specified angle value.
+      
+      In addition to degrees, values can be provided in grads, radians, or turns, but we’ll just be sticking with degrees.
+      
+      ```css
+      transform: rotate(10deg)
+      ```
+      
+      ### Skew
+      The `skew(x,y)` function specifies a skew along the x and y axes. As you’d expect, the `x` specifies the skew on the x axis, and the `y` specifies the skew on the y axis.
+      
+      ```css
+      transform: skew(15deg, 4deg);
+      ```
+      
+      ## Transitions
+      
+      Transitions allow the values of CSS properties to change over time, essentially providing simple animations.
+      
+      We can animate any of the transforms we’ve just seen, so that our pages feel more dynamic.
+      
+      Rather than writing out an animation in JavaScript, you can simply switch a property value and rely on the browser to do all the heavy lifting.
+      
+      Here are the steps to create a simple transition using only CSS:
+      
+      1.  Declare the original state of the element in the default style declaration.
+      2.  Declare the final state of your transitioned element; for example, a `:hover` state.
+      3.  Include the transition functions in your default style declaration using the transition properties, including: `transition-property`, `transition-duration`, `transition-timing-function`, and `transition-delay`. We’ll look at each of these and how they work shortly.
+      
+      The `transition-property` property defines the CSS properties of the element that should be transitioned, with `all` for all properties being the default.
+      
+      The exception to this “if there is a valid midpoint, it can be transitioned” rule is visibility: although there is no valid midpoint between the values `visible` and `hidden`, when transitioned, the value changes at the endpoint of the transition. 
+      
+      > The list of properties that can be animated is found at [https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animated_properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animated_properties).
+      
+      The `transition-duration` property sets how long the transition will take: the duration of time it takes to go from the default state to the transitioned state.
+      
+      ```css
+      transition-duration: 200ms;
+      ```
+      
+      The `transition-timing-function` lets you control the pace of the transition in even more granular detail. Do you want your animation to start off slow and become faster, start off fast and end slower, advance at an even keel, or some other variation?
+      
+      The most common timing functions include the key terms `ease`, `linear`, `ease-in`, `ease-out`, or `ease-in-out`.
+      
+      You can also describe your timing function more precisely by defining your own `cubic-bezier` function.
+      You can also look at online tools that let you play with different values, such as [http://cubic-bezier.com/](http://cubic-bezier.com/), which lets you compare the common key terms against each other or against your own cubic Bézier function. Another document, [http://estelle.github.io/animation/files/cubicbezierprint.html](http://estelle.github.io/animation/files/cubicbezierprint.html), allows you to set the timing function and time to watch it, visualizing how Bézier curves work.
+      
+      Finally, by using the `transition-delay` property, it’s possible to introduce a delay before the transition begins.
+      
+      ```css
+      transition-delay: 50ms;
+      ```
+      
+      Transition short-hand notation
+      ```css
+      .ad-ad2 h1 span {
+          transition: transform 0.2s ease-out 50ms;
+      }
+      
+      /* SAME AS*/
+      
+      .ad-ad2 h1 span {
+          transition-property: transform; 
+          transition-duration: 0.2s;  
+          transition-timing-function: ease-out;
+          transition-delay: 50ms;
+      }
+      ```
+      
+      ## Animations
+      
+      **CSS animations**, unlike transitions, allow you to control each step of an animation via keyframes.
+      
+      A **keyframe** is a snapshot that defines a starting or end point of any smooth transition. With CSS transitions, we’re essentially limited to defining a first and a last keyframe. 
+      
+      CSS animations allow us to add any number of keyframes in between, to guide our animation in more complex ways.
+      
+      ### Keyframes
+      Inside each keyframe include the properties you want to animate, along with the animated values. The values will be smoothly interpolated by the browser’s animation engine between each keyframe.
+      
+      Keyframes can be specified in any order; it’s the percentage values rather than the order of the declarations that determine the sequence of keyframes in the animation.
+      
+      ```css
+      @keyframes moveRight { 
+          from {
+          transform: translateX(-50%);
+          }
+          to {
+          transform: translateX(50%);
+          }
+      }
+      
+      @keyframes appearDisappear { 
+          0%, 100% {
+          opacity: 0;
+          }
+          20%, 80% {
+          opacity: 1;
+          }
+      }
+      
+      @keyframes bgMove {
+          100% {
+          background-position: 120% 0;
+          }
+      }
+      ```
+      
+      #### The Shorthand `animation` Property
+      
+      Fortunately, there’s a shorthand for all of these animation properties, especially since we’re still including the `-webkit-` prefix. The `animation` property takes as its value a space-separated list of values for the longhand `animation-name`, `animation-duration`, `animation-timing-function`, `animation-delay`, `animation-iteration-count`, `animation-direction`, `animation-fill-mode`, and `animation-play-state` properties:
+      
+      ```css
+      .verbose {
+          animation-name: appearDisappear; 
+          animation-duration: 300ms; 
+          animation-timing-function: ease-in;
+          animation-iteration-count: 1;
+          animation-direction: alternate;
+          animation-delay: 5s;
+          animation-fill-mode: backwards;
+          animation-play-state: running;
+      }
+      
+      /* shorthand */
+      .concise {
+          animation: 300ms ease-in alternate 5s backwards appearDisappear;
+      }
+      ```
+      
+      
+    </md-block>
+  </body>
+</html>

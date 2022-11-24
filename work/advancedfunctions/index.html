@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WDD330 | Advanced Functions</title>
+    <link rel="stylesheet" href="../../style-md.css" />
+        <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  </head>
+  <body>
+    <div class="header-top">
+      <a href='/wdd330-frontend-dev-II/' class="arrow">
+         <span class="material-symbols-outlined">
+           arrow_back_ios
+         </span>
+      </a>
+      <h1>Advanced Functions</h1>
+    </div>
+    <md-block>
+      In JavaScript, functions are **first-class objects**, which means they can be passed around in the same way as every other value. They can have their own properties and methods, as well as accepting other functions as parameters and being returned by other functions.
+
+## Function Properties and Methods
+All functions have a `length` property that returns the number of parameters the function has.
+
+```js
+function square(x) {
+ return x*x
+}
+
+square.length << 1
+```
+
+### Call and Apply Methods
+The `call()` method can be used to set the value of `this` inside a function to an object that is provided as the first argument.
+
+```js
+function sayHello(){
+    return `Hello, my name is ${ this.name }`; // unspecified this object
+}
+```
+
+We can create some objects that have a `name` property, then use the `call()` method to invoke the `sayHello()` function, providing each object as an argument. This will then take the value of `this` in the function:
+
+```js
+const clark = { name: 'Clark' };
+const bruce = { name: 'Bruce' };
+
+sayHello.call(clark);
+<< 'Hello, my name is Clarke'
+
+sayHello.call(bruce);
+<< 'Hello, my name is Bruce'
+```
+
+If the function that’s called requires any parameters, these need to be provided as arguments after the first argument, which is always the value of `this`
+
+```js
+function sayHello(greeting='Hello'){
+    return `${ greeting }, my name is ${ this.name }`;
+}
+
+sayHello.call(clark, 'How do you do');
+<< 'How do you do, my name is Clark'
+
+sayHello.call(bruce);
+<< 'Hello, my name is Bruce'
+```
+
+If a function doesn’t refer to an object as `this` in its body, it can still be called using the `call()` method, but you need provide `null` as its first argument.
+
+```js
+square.call(null, 4)
+<< 16
+```
+
+The `apply()` method works in the same way, except the arguments of the function are provided as an array, even if there is only one argument:
+
+```js
+square.apply(null, [4])
+<< 16
+```
+
+### Custom Properties: Memoization
+
+If a function takes some time to compute a return value, we can save the result in a `cache` property. 
+
+Then if the same argument is used again later, we can return the value from the cache, rather than having to compute the result again. 
+
+For example, say squaring a number was an expensive computational operation that took a long time. We could rewrite the `square()` function so it saved each result in a `cache` object that is a property of the function:
+
+```js
+function square(x){
+    square.cache = square.cache || {};
+    if (!square.cache[x]) {
+        square.cache[x] = x*x;
+    }
+    return square.cache[x]
+}
+```
+
+If we call the `cache` object we will see
+```js
+square(3);
+<< 9
+
+square(-11);
+<< 121
+
+square.cache;
+<< {"3": 9, "-11": 121}
+```
+
+## Immediately Invoked Function Expressions
+
+An **Immediately Invoked Function Expression** – or IIFE – (pronounced 'iffy') is an anonymous function that, as the name suggests, is invoked as soon as it’s defined. 
+
+This is easily achieved by placing parentheses at the end of the function definition (remember we use parentheses to invoke a function). 
+
+The function also has to be made into an expression, which is done by placing the whole declaration inside parentheses, as in this example:
+
+```js
+(function(){
+const temp = 'World';
+console.log(`Hello ${temp}`);
+})();
+<< 'Hello World'
+```
+
+### Temporary Variables
+
+Placing any code that uses the temporary variable inside an IIFE will ensure it’s only available while the IIFE is invoked, then it will disappear.
+
+```js
+let a = 1;
+let b = 2;
+
+(()=>{
+    const temp = a;
+    a = b;
+    b = temp;
+})();
+
+a;
+<< 2
+
+b;
+<< 1
+
+console.log(temp);
+<< Error: "temp is not defined"
+```
+
+### Initialization Code
+
+An IIFE can be used to set up any initialization code that there’ll be no need for again. 
+
+Because the code is only run once, there’s no need to create any reusable, named functions, and all the variables will also be temporary. 
+
+An IIFE will be invoked once, and can set up any variables, objects and event handlers when the page loads.
+
+```js
+(function() {
+    const name = 'Peter Parker'; // This might be obtained from a cookie in reality
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday', 'Friday','Saturday'];
+    const date = new Date(),today = days[date.getDay()];
+    console.log(`Welcome back ${name}. Today is ${today}`);
+
+})();
+<< 'Welcome back Peter Parker. Today is Tuesday'
+```
+
+### Safe Use of Strict Mode
+the recommended way to use strict mode is to place all your code inside an IIFE, like so:
+
+```js
+(function() {
+    'use strict';
+
+// All your code would go inside this function
+
+})();
+```
+
+This ensures that only your code inside the IIFE is forced to use strict mode.
+
+### Creating Self-contained Code Blocks
+Best approach is to divide code into modules thanks to ES6.
+
+## Function that Define and Rewrite Themselves
+
+JS allows functions to redefine themselves by assigning an anonymus functions to a variable that has the *same name* of the function
+
+```js
+function party(){
+    console.log('Wow this is amazing!');
+    party = function(){
+        console.log('Been there, got the T-Shirt');
+    }
+}
+```
+
+If the function is also assigned to another variable, this variable will maintain the original function definition and not be rewritten.
+
+```js
+function party(){
+    console.log('Wow this is amazing!');
+    party = function(){
+        console.log('Been there, got the T-Shirt');
+    }
+}
+
+const beachParty = party; // note that the party function has not been invoked
+
+beachParty(); // the party() function has now been redefined, even though it hasn't been called explicitly
+<< 'Wow this is amazing!'
+
+party(); 
+<< 'Been there, got the T-Shirt'
+
+beachParty(); // but this function hasn't been redefined
+<< 'Wow this is amazing!'
+
+beachParty(); // no matter how many times this is called it will remain the same
+<< 'Wow this is amazing!'
+```
+
+This is called the _Lazy Definition Pattern_ and is often used when some initialization code is required the first time it’s invoked.
+
+### Init-Time Branching
+
+You can use this feature of JS to create better functionality in the browser.
+
+For example, you can check if the features is supported in the browser the first time that it runs, then you don't have to do it each time:
+
+```js
+function ride(){
+    if (window.unicorn) { 
+        ride = function(){
+        // some code that uses the brand new and sparkly unicorn methods
+        return 'Riding on a unicorn is the best!';
+        }
+    } else {
+        ride = function(){
+        // some code that uses the older pony methods
+        return 'Riding on a pony is still pretty good';
+        }
+    }
+    return ride();
+}
+```
+
+## Recursive Functions
+
+A recursive function is one that invokes itself until a certain condition is met. It’s a useful tool to use when iterative processes are involved.
+
+```js
+function factorial(n) {
+    if (n === 0) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+```
+
+Another example is the Collatz Conjecture.
+It involves taking any positive integer and following these rules:
+
+-   If the number is even, divide it by two
+    
+-   If the number is odd, multiply it by three and add one
+    
+
+For example, if we start with the number 18, we would have the following sequence:
+
+18, 9, 28, 14, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1, 4, 2, 1, ...
+
+```js
+function collatz(n, sequence=[n]) {
+    if (n === 1){
+        return `Sequence took ${sequence.length} steps. It was ${sequence}`;
+    }
+
+    if (n%2 === 0) {
+        n = n/2;
+    } else { 
+        n = 3*n + 1;
+    }
+
+    return collatz(n,[...sequence,n]);
+}
+```
+
+You can read more about recursive functions in [this article on SitePoint](https://www.sitepoint.com/recursion-functional-javascript/).
+
+## Callbacks
+
+> Functions passed to other functions as arguments and then invoked inside the function they are passed to.
+
+### Event-driven Asynchronous Programming
+JavaScript is a single-threaded environment, which means only one piece of code will ever be processed at a time.
+
+Instead of waiting for an event to occur, a callback can be created that’s invoked when the event happens >> Code runs asynchronously
+
+Once the task has been completed, the callback will be invoked before returning to the rest of the program.
+
+Here is an example:
+
+```js
+// To simulate an operation that takes some time to happen, we can use the `setTimeout()` function to call the callback after a given number of seconds:
+function wait(message, callback, seconds){
+    setTimeout(callback,seconds * 1000);
+    console.log(message);
+}
+
+function selfDestruct(){
+    console.log('BOOOOM!');
+}
+
+// If we invoke the `wait()` function then log a message to the console, we can see how JavaScript works asynchronously:
+
+wait('This tape will self-destruct in five seconds ... ', selfDestruct, 5);
+console.log('Hmmm, should I accept this mission or not ... ?');
+
+<< 'This tape will self-destruct in five seconds ... '
+<< 'Hmmm, should I accept this mission or not ... ? '
+<< 'BOOOOM!'
+```
+
+This is known as the JavaScript **event-loop**, and you can learn more about it by watching [this legendary video](https://www.youtube.com/watch?v=8aGhZQkoFbQ).
+
+### Callback Hell
+
+Callback hell is the term used to refer to nesting callback function after callback function, and it's such a common issue that it even [has its own website](http://callbackhell.com/)!
+
+```js
+login(userName, function(error,user) {
+    if(error){
+        throw error;
+    } else {  
+        getPlayerInfo(user.id, function(error,info){
+        if(error){
+        throw error;
+        } else {
+            loadGame(info, function(error,game) {
+                if(error){
+                        throw error;
+                    } else {
+                    // code to run game
+                }
+            });
+        }
+        });
+    }
+});
+```
+
+### Promises
+
+A **promise** represents the future result of an asynchronous operation. Promises don't do anything that can't already be achieved using callbacks, but they help simplify the process, and avoid the convoluted code that can result from using multiple callbacks.
+
+#### The Promise Life Cycle
+
+When a promise is created, it calls an asynchronous operation and is then said to be _pending_. It remains in this state while the operation is taking place. 
+
+At this stage, the promise is said to be _unsettled_. Once the operation has completed, the promise is said to have been _settled_. A settled promise can result in two different outcomes:
+
+-   Resolved ― the asynchronous operation was completed successfully.
+-   Rejected ― the asynchronous operation didn’t work as expected, wasn't successfully completed or resulted in an error.
+
+Both these outcomes will return any relevant data, and you can take the appropriate action based on the outcome of the promise.
+
+#### Creating a Promise
+
+A promise is created using a constructor function. This takes a function called an **executor** as an argument. 
+
+The executor initializes the promise and starts the asynchronous operation. It also accepts two functions as arguments: the `resolve()` function is called if the operation is successful, and the `reject()` function is called if the operation fails. 
+
+The general layout of a promise can be seen in the code below:
+```js
+const promise = new Promise( (resolve, reject) => {
+    // initialization code goes here
+    if (success) {
+        resolve(value);
+    } else {
+        reject(error);
+    }
+});
+```
+
+Example:
+```js
+// Create a function
+const dice = {
+    sides: 6,
+    roll() {
+        return Math.floor(this.sides * Math.random()) + 1;
+    }
+}
+
+const promise = new Promise((resolve,reject) => {
+    const n = dice.roll();
+    setTimeout(() => {
+        (n > 1) ? resolve(n) : reject(n); // both the `resolve()` and `reject()` functions return the value of the `n` variable.
+    }, n*1000);
+});
+```
+
+#### Dealing With a Settled Promise
+Once a promise has been settled, the `then()` method can be used to deal with the outcome. This method accepts two arguments. 
+
+The first is a _fulfilment function_ that’s called when the promise is resolved. Any data returned from the `resolve()` function will be passed along to this function.
+
+The second argument is a rejection function that’s called if the promise is rejected. Similar to the fulfilment function, the rejection function receives any data returned from the `reject()` function.
+
+The `then()` and `catch()` methods can be chained together to form a succinct description of how to deal with the outcome of the promise:
+
+```js
+promise
+	.then( result => console.log(`I rolled a ${result}`) )
+    .catch( result => console.log(`Drat! ... I rolled a ${result}`) );
+```
+
+#### Chaining Multiple Promises
+Promises come into their own when multiple asynchronous tasks are required to be carried out one after the other. 
+
+If each function that performs an asynchronous operation returns a promise, we can chain the `then()` methods together to form a sequential piece of code that’s easy to read. 
+
+Each promise will only begin once the previous promise has been settled.
+
+The initial Callback Hell example can be nicely rewritten
+```js
+login(userName)
+	.then(user => getPlayerInfo(user.id))
+	.then(info => loadGame(info))
+	.catch( throw error)
+```
+
+### Async Functions
+Async functions were added to the ES2017 specification. 
+
+These functions are preceded by the `async` keyword and allow you to write asynchronous code as if it was synchronous. 
+
+This is achieved by using the `await` operator before an asynchronous function.
+
+The `login` function can be then rewritten:
+```js
+async function loadGame(userName) {
+    try {
+        const user = await login(userName);
+        const info = await getPlayerInfo (user.id);
+        // load the game using the returned info
+    }
+
+    catch (error){
+        throw error;
+    }
+}
+```
+
+### Generalized Functions
+
+Callbacks can be used to build more generalized functions. Instead of having lots of specific functions, one function can be written that accepts a callback.
+
+Example:
+```js
+function random(a,b=1) {
+    // if only 1 argument is provided, we need to swap the values of a and b
+    if (b === 1) {
+        [a,b] = [b,a];
+    } 
+    return Math.floor((b-a+1) * Math.random()) + a;
+}
+
+random(6);
+<< 4
+
+random(10,20);
+<< 13
+```
+
+We could refactor this function to make it more generic by adding a callback parameter, so a calculation is performed on the random number before it’s returned:
+
+```js
+function random(a,b,callback) {
+    if (b === undefined) b = a, a = 1; // if only one argument is supplied, assume the lower limit is 1
+        const result = Math.floor((b-a+1) * Math.random()) + a
+    if(callback) {
+        result = callback(result);
+    }
+    return result;
+}
+
+// we could then call the square() function on the result
+
+function square(n) {
+    return n*n;
+}
+
+random(1,10,square);
+<< 49
+
+// Or a random even number from two to ten:
+random(1,5, (n) => 2 * n );
+<< 8
+```
+
+### Functions That Return a Function
+We've just seen that functions can accept another function as an argument (a callback), but they can also return a function.
+
+```js
+function returnHello() {
+    console.log('returnHello() called');
+    return function() {
+        console.log('Hello World!');
+    }
+}
+```
+
+When the `returnHello()` function is invoked, it logs a message to the console then returns another function:
+
+```js
+returnHello()
+<< returnHello() called
+```
+
+To make use of the function that is returned, we need to assign it to a variable:
+
+```js
+const hello = returnHello();
+<< returnHello() called
+```
+
+Now we can invoke the 'Hello World' function by placing parentheses after the variable that it was assigned to:
+
+```js
+hello()
+<< Hello World!
+```
+
+This might seem a bit pointless, but let's now take it a step further and use this technique to create a generic 'greeter' function that takes a particular greeting as a parameter, then returns a more specific greeting function:
+
+```js
+function greeter(greeting = 'Hello') {
+    return function() {
+        console.log(greeting);
+    }
+}
+
+const englishGreeter = greeter();
+englishGreeter();
+<< Hello
+
+const frenchGreeter = greeter('Bonjour');
+frenchGreeter();
+<< Bonjour
+
+
+const germanGreeter = greeter('Guten Tag');
+germanGreeter();
+<< Guten Tag
+```
+
+## Closures
+>A closure is a reference to a variable that was created inside the scope of another function, but is then kept alive and used in another part of the program.
+
+### Function Scope
+The value of a variable was only available inside the block it was created inside if the `const` or `let` keywords were used. This also applies to the body of a function if the `var` keyword is used.
+
+```js
+const outside = 'In the global scope';
+function fn() {
+    const inside = 'In the function scope';
+}
+
+outside
+<< 'In the global scope'
+
+inside
+<< ReferenceError: inside is not defined
+```
+
+This is because the variable `inside` is only kept 'alive' while the function is active. Once the function has been invoked, any references to variables inside its scope are removed.
+
+One of the key principles in creating closures is that an 'inner' function, which is declared inside another function, has full access to all of the variables declared inside the scope of the function in which it’s declared (the 'outer' function). This can be seen in the example below:
+
+```js
+function outer() {
+    const outside = 'Outside!';
+    function inner() {
+        const inside = 'Inside!';
+        console.log(outside);
+        console.log(inside);
+    }
+    console.log(outside);
+    inner();
+}
+
+outer()
+<< Outside!
+Inside!
+Outside!
+```
+
+This means that whenever a function is defined inside another function, the inner function will have access to any variables that are declared in the outer function's scope.
+
+### Returning Functions
+
+A **closure** is formed when the inner function is returned by the outer function, maintaining access to any variables declared inside the enclosing function.
+
+```js
+function outer() {
+    const outside = 'Outside!';
+    function inner() {
+        const inside = 'Inside!';
+        console.log(outside);
+        console.log(inside);
+    }
+    return inner;
+}
+```
+
+We can now assign a variable to the return value of the `outer()` function:
+
+```js
+const closure = outer
+
+closure()
+<< Outside!
+Inside!
+```
+
+The variable `closure` now points to the `inner()` function that is returned by the `outer()` function.
+
+This is important as the variable `outside` should only exist while the `outer()` function is running. The closure maintains access to this variable, however, even though the `outer()` has been invoked.
+
+### A Practical Example
+A closure is formed when a function returns another function that then maintains access to any variables created in the original function’s scope. In the following example, two variables, `a` and `b`, are created in the scope of the `closure()` function. This then returns an anonymous arrow function that maintains access to the variables `a` and `b` even after the `closure()` function has been invoked:
+
+```js
+function closure() {
+    const a = 1.8;
+    const b = 32;
+    return c => c * a + b;
+}
+```
+
+Now we can create a new function by invoking the `closure()` function and assigning the return value to a variable called `toFahrenheit`:
+
+```js
+const toFahrenheit = closure();
+```
+
+This new function can then be invoked with its own argument, but the values of `a` and `b` from the original function are still kept 'alive':
+
+```js
+toFahrenheit(30);
+<< 86
+```
+
+### Generators
+ES6 introduced support for generators. These are special functions used to produce iterators that maintain the state of a value.
+
+To define a generator function, an asterisk symbol (`*`) is placed after the function declaration, like so:
+```js
+function* exampleGenerator() {
+// code for the generators goes here
+}
+```
+
+Calling a generator function doesn’t actually run any of the code in the function; 
+
+it returns a `Generator` object that can be used to create an iterator that implements a `next()` method that returns a value every time the `next()` method is called.
+
+Example with Fibonacchi series
+```js
+function* fibonacci(a,b) {
+    let [ prev,current ] = [ a,b ];
+    while(true) {
+        [prev, current] = [current, prev + current];
+        yield current;
+    }
+}
+```
+
+Generator functions employ the special `yield` keyword that is used to return a value. 
+The difference between the `yield` and the `return` keywords is that by using `yield`, the state of the value returned is remembered the next time `yield` is called.
+
+## Functional Programming
+Functional programming is a programming paradigm. Other examples of programming paradigms include object oriented programming and procedural programming. JavaScript is a multi-paradigm language, meaning that it can be used to program in a variety of paradigms.
+
+### Pure Functions
+
+A key aspect of functional programming is its use of pure functions. A pure function is a function that adheres to the following rules:
+
+1) The return value of a pure function should only depend on the values provided as arguments. It doesn't rely on values from somewhere else in the program.
+
+2) There are no side-effects. A pure function doesn't change any values or data elsewhere in the program. It only makes non-destructive data transformations and returns new values, rather than altering any of the underlying data.
+
+3) Referential transparency. Given the same arguments, a pure function will always return the same result.
+
+In order to follow these rules, any pure function must have:
+
+-   At least one argument; otherwise the return value must depend on something other than the arguments of the function, breaking the first rule
+-   A return value; otherwise there’s no point in the function (unless it has changed something else in the program – in which case, it’s broken the 'no side-effects' rule).
+
+The following example shows a pure function that writes the string provided as an argument backwards:
+
+```js
+function reverse(string) {
+    return string.split('').reverse().join('');
+}
+```
+
+Impure function
+```js
+let number = 42;
+let result = 0;
+
+function impureAdd(x) {
+    result = number + x;
+}
+
+impureAdd(10);
+result;
+<< 52
+```
+
+Same function but pure
+```js
+const number = 42;
+
+function pureAdd(x,y) {
+    return x + y;
+}
+
+result = pureAdd(number,10);
+<< 52
+```
+
+The emphasis is placed on using **function composition** to combine pure functions together to complete more complex tasks.
+
+You can read more about function composition in [this article on Sitepoint](https://www.sitepoint.com/function-composition-building-blocks-for-maintainable-code/).
+
+### High-Order Functions
+
+Higher-order functions are functions that accept another function as an argument, or return another function as a result, or both.
+
+Closures are used extensively in higher-order functions as they allow us to create a generic function that can be used to then return more specific functions based on its arguments.
+
+```js
+function multiplier(x){
+    return function(y){
+        return x*y;
+    }
+}
+
+doubler = multiplier(2);
+
+doubler(10);
+<< 20
+```
+
+The `multiplier()` function is an example of a higher-order function. This means we can use it to build other, more specific functions by using different arguments. For example, an argument of 3 can be used to create a `tripler()` function that multiplies its arguments by 3:
+
+```js
+tripler = multiplier(3);
+
+tripler(10);
+<< 30
+```
+
+This is one of the core tenets of functional programming: it allows generic higher-order functions to be used to return more specific functions based on particular parameters.
+
+When a higher-order function returns another function, we can use a neat trick to create an anonymous return function and immediately invoke it with a value instead by using double parentheses. The following example will calculate 3 to the power 5:
+
+```js
+power(3)(5);
+<< 243
+```
+
+### Currying
+A function is said to be curried when not all arguments have been supplied to the function, so it returns another function that retains the arguments already provided, and expects the remaining arguments that were omitted when the original function was called. A final result is only returned once all the expected arguments have eventually been provided.
+
+Currying relies on higher-order functions that are able to return partially applied functions. All curried functions are higher-order functions because they return a function, but not all higher-order functions are curried.
+
+Example of currying
+```js
+function multiplier(x,y) {
+    if (y === undefined) {
+        return function(z) {
+        return x * z;
+        }
+    } else {
+        return x * y;
+    }
+}
+```
+
+Now, if you found yourself frequently calculating the tax using the same rate of 22%, you could create a new curried function by providing just `0.22` as an argument:
+
+```js
+calcTax = multiplier(0.22);
+<< function (z){
+    return x * z;
+}
+```
+
+### A General Curry Function
+It’s possible to use a `curry()` function to take any function and allow it to be partially applied. The curry function is the following:
+
+```js
+function curry(func,...oldArgs) {
+    return function(...newArgs) {
+        const allArgs = [...oldArgs,...newArgs];
+        return func(...allArgs);
+    }
+}
+```
+
+## Chapter Summary
+
+-   Functions have built-in properties such as `length`, but can have custom properties added.
+    
+-   All functions have `call()` and `apply()` methods that can invoke a function with the value of `this` bound to an object that is provided as an argument.
+    
+-   Immediately Invoked Function Expressions or IIFEs are functions that are enclosed in parentheses and immediately followed by double parentheses so they’re invoked. They are useful for namespacing variables and setting default values.
+    
+-   Functions are able to dynamically redefine themselves in the body of the function, depending on certain conditions.
+    
+-   A recursive function will keep invoking itself until a certain condition is met.
+    
+-   A callback is a function that’s provided as an argument to another function.
+    
+-   Callbacks are frequently used in asynchronous programming as part of the event loop. This means that a program can continue to run in a single thread while waiting for another task to be completed.
+    
+-   Promises can be used instead of callbacks to deal with multiple asynchronous actions in sequence. They also provide a nicer mechanism for handling errors.
+    
+-   Functions that return other functions are known as higher-order functions.
+    
+-   A closure is the process of keeping a reference to a variable available outside the scope of the function it was originally defined in.
+    
+-   A generator is created by placing an asterisk character (*) after the `function` keyword.
+    
+-   A generator function will return an iterator object that provides a `next()` method, which returns the next value in a sequence that is defined in the generator function.
+    
+-   Functional programming involves breaking processes down into steps that can be applied as a series of functions.
+    
+-   Pure functions are functions that don't rely on the state of the code they are called from, have no side-effects, and always give the same result when given the same arguments (referential transparency).
+    
+-   Currying or partial application is the process of applying one argument at a time to a function. A new function is returned until all the arguments have been used.
+    </md-block>
+  </body>
+</html>

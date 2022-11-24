@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WDD330 | Final Project Proposal</title>
+    <link rel="stylesheet" href="../../style-md.css" />
+        <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  </head>
+  <body>
+    <div class="header-top">
+      <a href='/wdd330-frontend-dev-II/' class="arrow">
+         <span class="material-symbols-outlined">
+           arrow_back_ios
+         </span>
+      </a>
+      <h1>Final Project Proposal</h1>
+    </div>
+    <md-block>
+      # Currency Exchange Calculator
+
+## Overview
+The project will develop a web app in HTML, CSS, and JavaScript that will allow the user to calculate the currency exchange. It will pull live currency exchange data from an API endpoint to provide the latest pricing available.
+
+## Audience
+The audience is the general population that needs to find the currency exchange rate of a certain amount quickly and effectively. It is always hard and time-consuming to calculate manually the exchange so I want to help my audience to quickly navigate the complicated area of currency exchange.
+
+## Specific Functionalities
+There will be one input field where to put the amount, a dropdown menu to choose the beginning currency, another dropdown to choose the final currency and an output area to see the new value. 
+
+There is also an historical data section where you can see all of your past entries. It will be saved in the localstorage. 
+
+The UI will be very simple and intuitive allowing the user to quickly get the desired outcome. 
+
+There will be a submit button that will send a form that will be processed with JavaScript to have the correct output. 
+
+## Wireframes
+![mobile-homepage](../images/mobile-homepage.png)
+![mobile-history](../images/mobile-history.png)
+![desktop-homepage](../images/desktop-homepage.png)
+![desktop-history](../images/desktop-history.png)
+
+
+## Data Sources
+[Currency API](https://www.amdoren.com/currency-api/)
+LocalStorage to save local history
+
+## Module list
+utils.js
+localStorage.js
+history.js
+main.js
+
+## Element Styling
+Primary color: # 101560
+Secondary color: # edf3f9
+Accent color: # 1dc1d0
+Button color: # 0067e2 
+font header: Lato
+Font body: Open Sans
+Font size: 300 500 700
+
+## Milestones
+1. Develop HTML homepage
+		1. Input form
+		2. Dropdown menus
+			1. Each element has the name of the currency and the flag
+		3. Create submit button
+		4. Create div for showing result
+2. Successful API call
+	1. Make sure that the API endpoint works
+3. Save history in localStorage and correctly shows in the history page
+4. Input validation
+5. Final testing and deployment on GitHub pages
+
+## Trello Board 
+[Link to Trello board](https://trello.com/b/CaSSqbVJ/wdd330-final-project)
+
+    </md-block>
+  </body>
+</html>
